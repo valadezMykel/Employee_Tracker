@@ -1,0 +1,24 @@
+{
+  "name": "employee_tracker",
+  "version": "1.0.0",
+  "description": "app to organize employees",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/valadezMykel/Employee_Tracker.git"
+  },
+  "author": "Mykel Valadez",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/valadezMykel/Employee_Tracker/issues"
+  },
+  "homepage": "https://github.com/valadezMykel/Employee_Tracker#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "inquirer": "^7.3.3",
+    "mysql": "^2.18.1"
+  }
+}
