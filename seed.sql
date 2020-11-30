@@ -27,3 +27,14 @@ CREATE TABLE employees(
     FOREIGN KEY (role_id) REFERENCES roles,
     FOREIGN KEY (manager_id) REFERENCES employees
 );
+
+
+SELECT * FROM table WHERE * = ?
+
+INSERT INTO table(these values) 
+VALUES (those values)
+
+UPDATE table
+SET col=newVal 
+WHERE id = ?
+

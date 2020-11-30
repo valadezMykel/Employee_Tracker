@@ -1,43 +1,11 @@
-require("dotenv").config();
-const mysql = require("mysql");
+
 const inq = require("inquirer");
-const add = require("./inquirer/add");
-const view = require("./inquirer/view");
-const update = require("./inquirer/update");
-const remove = require("./inquirer/remove");
+const inqHandlers = require("./assets/inqHandlers/inqHandlers");
+const db = require("./assets/db_company/db_company");
 
-const dbConfig = {
-    host: process.env.dbHost,
-    port: 3306,
-    user: process.env.dbUser,
-    password: process.env.dbPass,
-    database: "company_db"
-};
+db.connect();
 
-let connection;
-
-const handleDisconnect = ()=> {
-    connection = mysql.createConnection(dbConfig);
-
-    connection.on("error", (err) =>{
-        console.log("error in db connection", err);
-        if(err.code === "PROTOCOL_CONNECTION_LOST"){
-            handleDisconnect()
-        }else{
-            throw err;
-        }
-    })
-};
-
-handleDisconnect();
-
-connection.connect((err)=>{
-    if(err) {
-        setTimeout(handleDisconnect, 2000);
-    };
-});
-
-inq.prompt([
+const mainMenuQuests = [
     {
         type: "list",
         name: "topicSelection1",
@@ -49,24 +17,83 @@ inq.prompt([
             "Remove a department, role, or employee"
         ]
     }
-]).then(async (answer) =>{
-    console.log(answer);
-    switch(answer.topicSelection1){
-        case "Add a department, role, or employee":
-            add();
-            break;
-        case "View a department, role, or employee":
-            const returned = await view();
-            connection.query(returned, (err, results)=>{
-                if (err) throw err;
-                console.table(results);
-            })
-            break;
-        case "Update an employee's role or manager":
-            update();
-            break;
-        case "Remove a department, role, or employee":
-            remove();
-            break;
+];
+
+const viewQuests = [
+    {
+        type: "list",
+        name: "table",
+        message: "Which would you like to view?",
+        choices: [
+            "departments",
+            "roles",
+            "employees"
+        ]
+    },
+    {
+        type: "list",
+        name: "idType",
+        message: "How would would you like to find and employee?",
+        choices: [
+            "By id",
+            "By role",
+            "By manager",
+            "By department",
+            "All employees"
+        ],
+        when: (answer) => {
+            return (answer.table === "employees")
+        }
+    },
+    {
+        type: "input",
+        name: "specificId",
+        message: "Enter the id parameter you wish to search by",
+        when: (answer) => {
+            return (answer.idType !== "All employees" && answer.table === "employees")
+        }
     }
-});
+];
+
+const addQuests = [
+    {
+        type: "list",
+        name: "table",
+
+    }
+]
+
+
+const start = () =>{
+    inq.prompt(mainMenuQuests).then((answer) =>{
+
+        switch(answer.topicSelection1){
+            case "Add a department, role, or employee":
+
+                break;
+            case "View a department, role, or employee":
+                inq.prompt(viewQuests).then((answers)=>{
+                    let sort = {
+                    queryResultsHandler: function (results){
+                        console.table(results);
+                    },
+                    queryType: "SELECT * FROM "
+                    }
+                    // console.log(answers);
+                    // console.log(answers.queryType);
+                    const obj = new inqHandlers(answers, sort)
+                    db.dbCall(obj);
+                })
+                break;
+            case "Update an employee's role or manager":
+
+                break;
+            case "Remove a department, role, or employee":
+                
+                break;
+        }
+    });
+};
+
+
+start();
