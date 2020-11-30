@@ -59,9 +59,68 @@ const addQuests = [
     {
         type: "list",
         name: "table",
-
+        message: "What would you like to add?",
+        choices: [
+            "departments",
+            "roles",
+            "employees"
+        ]
+    },
+    {
+        when: (ans) => ans.table === "departments",
+        type: "input",
+        name: "name",
+        message: "Enter the name of the department you want to create"   
+    },
+    {
+        when: (ans) => ans.table === "roles",
+        type: "input",
+        name: "name",
+        message: "Enter the name of the role you want to create"   
+    },
+    {
+        when: (ans) => ans.table === "roles",
+        type: "input",
+        name: "salary",
+        message: "Enter the new role's salary"   
+    },
+    {
+        when: (ans) => ans.table === "roles",
+        type: "input",
+        name: "departmentId",
+        message: "Enter the id of the department the new role belongs to"   
+    },
+    {
+        when: (ans) => ans.table === "employees",
+        type: "input",
+        name: "fName",
+        message: "Enter the first name of the new employee"   
+    },
+    {
+        when: (ans) => ans.table === "employees",
+        type: "input",
+        name: "lName",
+        message: "Enter the last name of the new employee"    
+    },
+    {
+        when: (ans) => ans.table === "employees",
+        type: "input",
+        name: "roleId",
+        message: "Enter the id of the new employee's role"    
+    },
+    {
+        when: (ans) => ans.table === "employees",
+        type: "confirm",
+        name: "needManager",
+        message: "Does the new employee have a manager?"    
+    },
+    {
+        when: (ans) => ans.needManger,
+        type: "input",
+        name: "managerID",
+        message: "Enter the id of the manager"    
     }
-]
+];
 
 
 const start = () =>{
@@ -79,8 +138,6 @@ const start = () =>{
                     },
                     queryType: "SELECT * FROM "
                     }
-                    // console.log(answers);
-                    // console.log(answers.queryType);
                     const obj = new inqHandlers(answers, sort)
                     db.dbCall(obj);
                 })
