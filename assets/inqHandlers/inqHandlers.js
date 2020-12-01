@@ -5,7 +5,14 @@ let searchById;
 
 function instructionBuilder(inqAnswersObj, sort) {
 
-    instruction = sort.queryType + inqAnswersObj.table;
+    instruction = sort.queryText + inqAnswersObj.table;
+
+    if(sort.extraQueryText){
+        instruction += sort.extraQueryText;
+    }
+    // 
+    // INSERT INTO table(these values) 
+    // VALUES (those values)
 
     if(inqAnswersObj.specificId){
         console.log("is specific")
@@ -25,6 +32,7 @@ function instructionBuilder(inqAnswersObj, sort) {
         }
         instruction += ` WHERE ${searchById} = ${inqAnswersObj.specificId}`
     }
+    console.log(instruction);
 }
 
 // function variablesBuilder(inqAnswersObj){

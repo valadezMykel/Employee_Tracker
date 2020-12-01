@@ -5,6 +5,8 @@ const db = require("./assets/db_company/db_company");
 
 db.connect();
 
+let sort;
+
 const mainMenuQuests = [
     {
         type: "list",
@@ -128,16 +130,42 @@ const start = () =>{
 
         switch(answer.topicSelection1){
             case "Add a department, role, or employee":
+                inq.prompt(addQuests).then((answers)=>{
+                    let text;
+                    switch(answers.table){
+                        case "departments":
+                            text = `"${answers.name}"`;
+                            break;
+                        case "roles":
+                            text = `"${answers.name}", ${answers.salary}, ${answers.departmentId}`;
+                            break;
+                        case "employees":
+                            text = `"${answers.fName}", "${answers.lName}", ${answers.roleId}`;
+                            if(answers.needManger){
+                                text += `, ${answers.managerId}`;
+                            }
+                            break;
+                    }
 
+                    sort = {
+                        queryText: "INSERT INTO ",
+                        extraQueryText: ` VALUES (null, ${text})`,
+                        queryResultsHandler: function (results){
+                            console.log(`${answers.name} was added to ${answers.table}`)
+                        }
+                    };
+                    const obj = new inqHandlers(answers, sort)
+                    db.dbCall(obj);
+                })
                 break;
             case "View a department, role, or employee":
                 inq.prompt(viewQuests).then((answers)=>{
-                    let sort = {
+                    sort = {
                     queryResultsHandler: function (results){
                         console.table(results);
                     },
-                    queryType: "SELECT * FROM "
-                    }
+                    queryText: "SELECT * FROM "
+                    };
                     const obj = new inqHandlers(answers, sort)
                     db.dbCall(obj);
                 })
