@@ -147,6 +147,54 @@ const updateQuests = [
     }
 ]
 
+const deleteQuests = [
+    {
+        type: "list",
+        name: "table",
+        message: "What category would you like to delete from?",
+        choices: [
+            "departments",
+            "roles",
+            "employees"
+        ]
+    },
+    {
+        when: (ans) => ans.table === "departments",
+        type: "confirm",
+        name: "allClear",
+        message: "Before you delete a department make sure that no roles or employees are assigned to it.  Do You wish to continue?" 
+    },
+    {
+        when: (ans) => {return (ans.table === "departments" && ans.allClear === true)},
+        type: "input",
+        name: "specificId",
+        message: "Enter the id of the department you want to delete"
+    },
+    {
+        when: (ans) => ans.table === "roles",
+        type: "confirm",
+        name: "allClear",
+        message: "Before you delete a role make sure that no employees are assigned to it. Do you wish to continue?" 
+    },
+    {
+        when: (ans) => {return (ans.table === "roles" && ans.allClear === true)},
+        type: "input",
+        name: "specificId",
+        message: "Enter the id of the role you want to delete"
+    },
+    {
+        when: (ans) => ans.table === "employees",
+        type: "confirm",
+        name: "allClear",
+        message: "If the employee you wish to delete is a manager make sure that no other employees are currently assigned to them before deleting them.  Do you wish to continue?" 
+    },
+    {
+        when: (ans) => {return (ans.table === "employees" && ans.allClear === true)},
+        type: "input",
+        name: "specificId",
+        message: "Enter the id of the employee you want to delete"
+    },
+]
 
 const start = () =>{
     inq.prompt(mainMenuQuests).then((answer) =>{
@@ -218,11 +266,22 @@ const start = () =>{
                 });
                 break;
             case "Remove a department, role, or employee":
-                
+                inq.prompt(deleteQuests).then((answers)=>{
+
+                    sort = {
+                        queryResultsHandler: function(result){
+                            console.log(`item with ${answers.specificId} was deleted form ${answers.table}`);
+                            start();
+                        },
+                        queryText: `DELETE FROM `
+                    }
+
+                    const obj = new inqHandlers(answers, sort)
+                    db.dbCall(obj);
+                });
                 break;
             case "Exit program":
                 process.exit()
-                break;
         }
     });
 };

@@ -29,12 +29,4 @@ CREATE TABLE employees(
 );
 
 
-SELECT * FROM table WHERE * = ?
-
-INSERT INTO table(these values) 
-VALUES (those values)
-
-UPDATE table
-SET col=newVal 
-WHERE id = ?
 

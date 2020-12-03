@@ -33,7 +33,6 @@ function instructionBuilder(inqAnswersObj, sort) {
         };
         instruction += ` WHERE ${searchById} = ${inqAnswersObj.specificId}`
     };
-    console.log(instruction);
 };
 
 
@@ -52,10 +51,8 @@ class QueryObj {
         funcBuilder(sort);
 
         this.instruction = instruction;
-        // this.variables = variables;
         this.func = func;
     }
-
 }
 
 module.exports = QueryObj;
