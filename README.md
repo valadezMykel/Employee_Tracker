@@ -26,9 +26,14 @@ This project uses node js and MYSQL to create and maintane a data base of compan
 
 ## Installation
 
-First you will need node js and MYSQL installed.
-Second you will need to run the SQL seed to set up the data base.
-Third run an npm i to install the necessary node modules.  
+#1 Install node js and MYSQL if you do not already have them installed.
+
+#2 Run the SQL seed to set up the data base.
+
+#3 Run an npm i to install the necessary node modules.
+
+#4 Set up your database connection by inputting the correct information into the dbConfig object in assets/db_company/db_company.js on line 4.
+
 Then run the program by starting the app.js file.
 
 
