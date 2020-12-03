@@ -16,7 +16,8 @@ const mainMenuQuests = [
             "Add a department, role, or employee",
             "View a department, role, or employee",
             "Update an employee's role or manager",
-            "Remove a department, role, or employee"
+            "Remove a department, role, or employee",
+            "Exit program"
         ]
     }
 ];
@@ -124,6 +125,28 @@ const addQuests = [
     }
 ];
 
+const updateQuests = [
+    {
+        type: "input",
+        name: "specificId",
+        message: "Enter the id of the employee you wish to update"
+    },
+    {
+        type: "list",
+        name: "roleOrManager",
+        message: "Would you like to update the employee's role or manager?",
+        choices:[
+            "role",
+            "manager"
+        ]
+    },
+    {
+        type: "input",
+        name: "changeToThisId",
+        message: "Enter the new id you wish to assign"
+    }
+]
+
 
 const start = () =>{
     inq.prompt(mainMenuQuests).then((answer) =>{
@@ -143,15 +166,18 @@ const start = () =>{
                             text = `"${answers.fName}", "${answers.lName}", ${answers.roleId}`;
                             if(answers.needManger){
                                 text += `, ${answers.managerId}`;
+                            }else{
+                                text += ', NULL'
                             }
                             break;
                     }
 
                     sort = {
                         queryText: "INSERT INTO ",
-                        extraQueryText: ` VALUES (null, ${text})`,
+                        extraQueryText: ` VALUES (NULL, ${text})`,
                         queryResultsHandler: function (results){
-                            console.log(`${answers.name} was added to ${answers.table}`)
+                            console.log(`${answers.name} was added to ${answers.table}`);
+                            start();
                         }
                     };
                     const obj = new inqHandlers(answers, sort)
@@ -163,6 +189,7 @@ const start = () =>{
                     sort = {
                     queryResultsHandler: function (results){
                         console.table(results);
+                        start();
                     },
                     queryText: "SELECT * FROM "
                     };
@@ -171,10 +198,30 @@ const start = () =>{
                 })
                 break;
             case "Update an employee's role or manager":
+                inq.prompt(updateQuests).then((answers)=>{
+                    let col = "role_id";
+                    if(answers.roleOrManager === "manager"){
+                        col = "manager_id";
+                        };
 
+                    sort = {
+                        queryResultsHandler: function (results){
+
+                            console.log(`Employee with id ${answers.specificId} had their ${answers.roleOrManager} changed`);
+                            start();
+                        },
+                        queryText: `UPDATE employees SET ${col}=${answers.changeToThisId}`
+                    };
+
+                    const obj = new inqHandlers(answers, sort)
+                    db.dbCall(obj);
+                });
                 break;
             case "Remove a department, role, or employee":
                 
+                break;
+            case "Exit program":
+                process.exit()
                 break;
         }
     });

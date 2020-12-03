@@ -1,25 +1,23 @@
 let instruction;
-let variables;
 let func;
 let searchById;
 
 function instructionBuilder(inqAnswersObj, sort) {
 
-    instruction = sort.queryText + inqAnswersObj.table;
+    instruction = sort.queryText;
+    
+    if(inqAnswersObj.table){
+        instruction += inqAnswersObj.table;
+    };
 
     if(sort.extraQueryText){
         instruction += sort.extraQueryText;
-    }
-    // 
-    // INSERT INTO table(these values) 
-    // VALUES (those values)
+    };
 
     if(inqAnswersObj.specificId){
-        console.log("is specific")
+
         switch(inqAnswersObj.idType){
-            case "By id":
-                searchById = "id";
-                break;
+
             case "By role":
                 searchById = "role_id";
                 break;
@@ -29,21 +27,22 @@ function instructionBuilder(inqAnswersObj, sort) {
             case "By department":
                 searchById = "department_id";
                 break;
-        }
+            default:
+                searchById = "id";
+                break;
+        };
         instruction += ` WHERE ${searchById} = ${inqAnswersObj.specificId}`
-    }
+    };
     console.log(instruction);
-}
+};
 
-// function variablesBuilder(inqAnswersObj){
-//     return null
-// }
+
 
 function funcBuilder(sort){
     func = (err, results) =>{
         if(err) throw err;
         sort.queryResultsHandler(results);
-    }
+    };
 };
 
 class QueryObj {
