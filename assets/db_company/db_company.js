@@ -24,15 +24,13 @@ const handleDisconnect = ()=> {
     })
 };
 
-exports.connect = () =>{
-    console.log("is connecting")
-    handleDisconnect();
+handleDisconnect();
 
-    connection.connect((err)=>{
+connection.connect((err)=>{
     if(err) {
         setTimeout(handleDisconnect, 2000);
     };
-})};
+});
 
 exports.dbCall = (obj) => {
     connection.query(obj.instruction, obj.func)

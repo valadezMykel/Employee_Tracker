@@ -35,8 +35,6 @@ function instructionBuilder(inqAnswersObj, sort) {
     };
 };
 
-
-
 function funcBuilder(sort){
     func = (err, results) =>{
         if(err) throw err;
