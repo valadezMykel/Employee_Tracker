@@ -8,6 +8,8 @@
 
 For the Repository link click [here](https://github.com/valadezMykel/Employee_Tracker)
 
+For an instructional video link click [here](https://youtu.be/s4EUdHU2nFE)
+
 
 ## Table of Contents
 
